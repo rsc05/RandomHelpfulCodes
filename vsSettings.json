@@ -1,0 +1,16 @@
+{
+  "workbench.colorTheme": "Cobalt2",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.formatOnSave": true,
+  "editor.mouseWheelZoom": true,
+  "editor.accessibilitySupport": "off",
+  "notebook.lineNumbers": "on",
+  "git.autofetch": true,
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.editorAssociations": {
+    "*.docx": "default"
+  }
+}
