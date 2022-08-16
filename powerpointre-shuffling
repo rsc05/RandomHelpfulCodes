@@ -1,0 +1,84 @@
+# Create folders in the current path
+
+# Get path
+from ast import For
+import os
+from glob import glob
+import shutil
+from wsgiref.handlers import format_date_time
+import shutil
+import comtypes.client
+
+
+Current_path = os.getcwd()
+
+# Create nf Folders and in each folder create a list of folders lf
+nf = 10
+lf = ['Lab', 'Lecture']
+for i in range(1, nf+1):
+    newpath = os.path.join(Current_path, "Week "+str(i))
+    if not os.path.exists(newpath):
+        os.makedirs(newpath)
+    for j in lf:
+        newpath1 = os.path.join(newpath, j)
+        if not os.path.exists(newpath1):
+            os.makedirs(newpath1)
+
+# Read folders from a particular folder in the path1
+path1 = r"C:\Users\zm21385\OneDrive - University of Bristol\University of Bristol\Financial Technology Group Project\Lectures"
+
+
+def PPTtoPDF(inputFileName, outputFileName, formatType=32):
+    files = []
+    try:
+        powerpoint = comtypes.client.CreateObject("Powerpoint.Application")
+        powerpoint.Visible = 1
+
+        # if outputFileName[-3:] != 'pdf':
+        #     outputFileName = outputFileName + ".pdf"
+        deck = powerpoint.Presentations.Open(inputFileName)
+        # formatType = 32 for ppt to pdf
+        deck.SaveAs(outputFileName, formatType)
+        deck.Close()
+        powerpoint.Quit()
+    except:
+        print("Could not open")
+        files.append(inputFileName)
+
+
+# Loop through each folder in the directory
+for k in next(os.walk(path1))[1]:
+
+    # Change the path to the new path
+    path2 = os.path.join(path1, k)
+
+    # Find specific flies in a folder
+    # particularly powerpoint presentations in path2
+    pattern = '*.pptx'
+    full_path = os.path.join(path2, pattern)
+
+    # Get the last folder in the path
+    week = os.path.basename(path2)
+
+    # go to that folder in the destination folder
+    destination_dir = os.path.join(Current_path, week, "Lecture")
+
+    # Get the files from each folder
+    for fname in sorted(glob(full_path)):
+        root_name_of_file = os.path.basename(fname)[:-5]
+        # print(root_name_of_file)
+
+        # state the distination folder
+        destination_dir1 = os.path.join(
+            destination_dir, root_name_of_file+".pdf")
+        print(destination_dir1)
+
+        # Convert powerpoint to pdf file
+        PPTtoPDF(fname, destination_dir1)
+
+        # if fname[-3:] != 'pdf':
+        #     fname = fname + ".pdf"
+        #     print(fname)
+
+        # Copy files to a particular directory
+        # shutil.copy(fname, destination_dir)
