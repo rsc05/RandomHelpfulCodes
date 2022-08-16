@@ -1,0 +1,45 @@
+# Create folders in the current path
+
+# Get path
+from ast import For, If
+import os
+from glob import glob
+import shutil
+from wsgiref.handlers import format_date_time
+import shutil
+import comtypes.client
+
+
+Current_path = os.getcwd()
+
+# Read folders from a particular folder in the path1
+path1 = r"C:\Users\zm21385\OneDrive - University of Bristol\University of Bristol\Financial Technology Group Project 2021-2022\Labs"
+
+
+# Loop through each folder in the directory
+for k in next(os.walk(path1))[1]:
+
+    # Change the path to the new path
+    path2 = os.path.join(path1, k)
+
+    # Find specific flies in a folder
+    # particularly powerpoint presentations in path2
+    pattern = '*.docx'
+    full_path = os.path.join(path2, pattern)
+
+    # Get the last folder in the path
+    week = os.path.basename(path2)
+
+    # Get the files from each folder
+    for fname in sorted(glob(full_path)):
+        root_name_of_file = os.path.basename(fname)[:-5]
+
+        # Copy word documents that contain numbers
+        print(root_name_of_file)
+        L = [int(s) for s in root_name_of_file.split() if s.isdigit()]
+        # check if list is empty
+        if len(L) > 0:
+            # go to that folder in the destination folder
+            destination_dir = os.path.join(
+                Current_path, 'Week '+str(L[0]), "Lab")
+            shutil.copy(fname, destination_dir)
