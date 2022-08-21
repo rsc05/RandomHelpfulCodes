@@ -1,0 +1,29 @@
+import TeamsFunctions as TF1
+from TeamsFunctions import *
+
+# Sign in to Microsoft MS Streams 
+# requires you to use authentication app
+UserEmail="zm21385@bristol.ac.uk"
+Password="Rami1234"
+driver=TF1.Open_MS_Streams(UserEmail, Password)
+
+names_of_minividios=[]
+names1=["Theodoros Constantinides","yan ge"]
+
+# Deciding on an infinte loop videos
+names_of_minividios=[]
+driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.CONTROL + Keys.HOME)
+for j in range(54,59):
+    path1="/html/body/div[1]/div/div[2]/studio-page/div/section/div/div/studio-video-results/video-results/div[3]/items-list/div/div[1]"
+    path3=f"{path1}/div[{j}]"
+    Press_Show_more(driver)
+    print(j)
+    r=TF1.search_element(driver, path3)
+    # path3=f"{path1}/div[{j}]"
+    # r=TF1.search_element(driver, path3)
+    name = r.find_element(By.XPATH, ".//descendant::h3//a").get_attribute('innerText')
+    # while you can continue to scroll increase j
+    if 'ML' in name:
+        names_of_minividios.append(name)
+        TF1.Try(driver, path3, names1)
+        driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.CONTROL + Keys.HOME)
