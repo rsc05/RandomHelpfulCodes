@@ -171,8 +171,6 @@ def Open_MS_Streams(UserEmail, Password):
 # Open_MS_Streams(UserEmail, Password)
 
 
-
-
 # A simpler way to check for existence of an element is to use .find_elements() and check for an empty list.
 
 def Press_Show_more(driver):
@@ -203,3 +201,29 @@ def search_element(driver, path1):
             break
         except:
             continue
+
+# Get title of all videos in MS Stream
+
+
+def Get_Titles(driver):
+    title_of_videos = []
+    xpath_names = []
+    Press_Show_more(driver)
+    path1 = "/html/body/div[1]/div/div[2]/studio-page/div/section/div/div/studio-video-results/video-results/div[3]/items-list/div/div[1]"
+    j = 1
+    while True:
+        if j == 900:
+            break
+        try:
+            path2 = f"{path1}/div[{j}]"
+            ele = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located((By.XPATH, path2)))
+            driver.execute_script("arguments[0].scrollIntoView(true);", ele)
+            ele1 = ele.find_element(By.XPATH, ".//descendant::h3//a")
+            title_of_videos.append(ele1.get_attribute('innerText'))
+            xpath_names.append(ele1)
+            j += 1
+
+        except:
+            break
+    return title_of_videos
