@@ -17,6 +17,8 @@ def PPTtoPDF(inputFileName, outputFileName, formatType = 32):
     
 # Read folders from a particular folder in the path1
 path1 = r"D:\OneDrive - University of Bristol\University of Bristol\FTGP 2022-2023\BB"
+
+# Setting the intial part of the path where you want to save the file
 path2= r"D:\OneDrive - University of Bristol\University of Bristol\FTGP 2022-2023 BB"
 
 # Select the folder with only number names
