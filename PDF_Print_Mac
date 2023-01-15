@@ -1,0 +1,67 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+import os, datetime
+import os
+import shutil
+from operator import itemgetter
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+import time
+
+# Define the path for the pdf files and destination
+pdf_path = os.getcwd() # current working directory
+# destination_path = os.path.join(cwd, "printed_pdfs")
+destination_path="/Users/ramichehab/Desktop/printed"
+
+# Create destination directory if it doesn't exist
+if not os.path.exists(destination_path):
+    os.mkdir(destination_path)
+
+# Get a list of the pdf files in the directory
+files = os.listdir(pdf_path)
+files = [file for file in files if file.endswith('.pdf')]
+
+# Get the latest downloaded file before new downloads
+download_path = os.path.expanduser('~/Downloads')
+dfiles = os.listdir(download_path)
+previous_file = max(dfiles, key=lambda x: os.path.getctime(os.path.join(download_path, x)))
+src1 = os.path.join(download_path, previous_file)
+
+# f=files[0]
+for f in files:
+    # open pdf in chrome
+    chrome_options = Options()
+    chrome_options.add_argument('--kiosk-printing')
+    driver = webdriver.Chrome(chrome_options=chrome_options)
+    file_path = os.path.join(pdf_path, f)
+    driver.get("file:///" + file_path)
+
+    # wait until the page is loaded
+    element_present = EC.presence_of_element_located((By.TAG_NAME, 'body'))
+    WebDriverWait(driver, 10).until(element_present)
+
+    # Click on the print button
+    driver.execute_script('window.print();')
+
+    # Wait for the file to be downloaded by ensuring that the last downloaded file does not match the pervious file
+    while True:
+        # Get the list of files in the download directory
+        dfiles = os.listdir(download_path)
+        dfiles = [file for file in dfiles if file.endswith('.pdf')]
+
+        # Get the last file in the list
+        if len(dfiles) > 0:
+            last_file = max(dfiles, key=lambda x: os.path.getctime(os.path.join(download_path, x)))
+            if previous_file is None or previous_file != last_file:
+                break
+        time.sleep(1)
+
+
+
+    # Move downloaded file into the destination directory
+    src = os.path.join(download_path, last_file)
+    dst = os.path.join(destination_path, f)
+    shutil.move(src, dst)
+    print(f"{src} moved to {dst}")
+    driver.close()
